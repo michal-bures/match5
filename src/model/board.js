@@ -1,3 +1,5 @@
+import { LineFinder } from "./LineFinder";
+
 function clear(board) {
     return create(board.width, board.height);
 }
@@ -6,7 +8,7 @@ function create(width, height) {
     return {
         width,
         height,
-        cells: new Array(width * height).fill(" ")
+        cells: new Array(width * height).fill(null)
     };
 }
 
@@ -24,17 +26,18 @@ function placeSymbol(board, x, y, symbol) {
 }
 
 function getSymbolAt(board, x, y) {
-    assertCellValid(board, x, y);
+    if (!isCellValid(board, x, y)) {
+        throwInvalidCoordinatesError(board, x, y);
+    }
     return board.cells[x * board.width + y];
 }
 
-function assertCellValid(board, x, y) {
-    if (x >= board.width || x < 0) throwInvalidCoordinatesError(board, x, y);
-    if (y >= board.height || y < 0) throwInvalidCoordinatesError(board, x, y);
+function isCellValid(board, x, y) {
+    return x < board.width && x >= 0 && y < board.height && y >= 0;
 }
 
 function isCellEmpty(board, x, y) {
-    return getSymbolAt(board, x, y) === " ";
+    return getSymbolAt(board, x, y) === null;
 }
 
 function throwInvalidCoordinatesError(board, x, y) {
@@ -44,11 +47,16 @@ function throwInvalidCoordinatesError(board, x, y) {
     );
 }
 
+function findStraightLine({ board, x, y, requiredLength }) {
+    return LineFinder.findStraightLine({ board, x, y, requiredLength });
+}
+
 export const Board = {
     clear,
     create,
     placeSymbol,
     getSymbolAt,
-    assertCellValid,
-    isCellEmpty
+    isCellValid,
+    isCellEmpty,
+    findStraightLine
 };

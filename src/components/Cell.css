@@ -6,6 +6,14 @@ td {
     cursor: pointer;
 }
 
+.clickable:hover {
+    background-color: lightyellow;
+}
+
 .not-clickable {
     cursor: default;
+}
+
+.highlighted {
+    background-color: greenyellow;
 }

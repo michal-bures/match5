@@ -7,10 +7,10 @@ describe("when created 5x5 board", () => {
         board = Board.create(5, 5);
     });
 
-    it("asking for symbol at valid position should return space", () => {
-        expect(Board.getSymbolAt(board, 0, 0)).toEqual(" ");
-        expect(Board.getSymbolAt(board, 1, 4)).toEqual(" ");
-        expect(Board.getSymbolAt(board, 4, 4)).toEqual(" ");
+    it("asking for symbol at valid position should return null", () => {
+        expect(Board.getSymbolAt(board, 0, 0)).toEqual(null);
+        expect(Board.getSymbolAt(board, 1, 4)).toEqual(null);
+        expect(Board.getSymbolAt(board, 4, 4)).toEqual(null);
     });
 
     it("asking for symbol at invalid position should throw error", () => {
@@ -43,8 +43,29 @@ describe("when created 5x5 board", () => {
     });
 
     it("should allow to clear board", () => {
-        Board.placeSymbol(board, 1, 1, "O");
-        Board.clear(board);
-        expect(Board.getSymbolAt(board, 1, 1)).toEqual(" ");
+        board = Board.placeSymbol(board, 1, 1, "O");
+        board = Board.clear(board);
+        expect(Board.getSymbolAt(board, 1, 1)).toEqual(null);
+    });
+
+    it("should correctly indentify straight lines of given length passing through given point", () => {
+        board = Board.placeSymbol(board, 1, 1, "O");
+        board = Board.placeSymbol(board, 2, 2, "O");
+        board = Board.placeSymbol(board, 3, 3, "O");
+        board = Board.placeSymbol(board, 4, 4, "X");
+
+        const expectedLine = [{ x: 3, y: 3 }, { x: 2, y: 2 }, { x: 1, y: 1 }];
+
+        expect(Board.findStraightLine({ board, x: 1, y: 1, requiredLength: 3 })).toEqual(
+            expectedLine
+        );
+        expect(Board.findStraightLine({ board, x: 2, y: 2, requiredLength: 3 })).toEqual(
+            expectedLine
+        );
+        expect(Board.findStraightLine({ board, x: 3, y: 3, requiredLength: 3 })).toEqual(
+            expectedLine
+        );
+        expect(Board.findStraightLine({ board, x: 1, y: 1, requiredLength: 4 })).toBe(undefined);
+        expect(Board.findStraightLine({ board, x: 2, y: 1, requiredLength: 1 })).toBe(undefined);
     });
 });
