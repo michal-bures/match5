@@ -43,33 +43,33 @@ export class GameState {
         if (this.isGameOver(state)) {
             throw new Error(`Cannot make play at ${x}:${y}, the game is over!`);
         }
-        let currentPlayer = this.getCurrentPlayer(state);
-        const newBoard = Board.placeSymbol(state.board, x, y, this.getCurrentPlayer(state).symbol);
-        let winner = undefined;
-        let currentPlayerIndex = state.currentPlayerIndex;
-        const winningLine = Board.findStraightLine({
-            board: newBoard,
-            x,
-            y,
-            requiredLength: state.winCondition
-        });
-        if (winningLine) {
-            winner = currentPlayer;
-        } else {
-            currentPlayerIndex = nextPlayerIndex(state);
-        }
 
-        return {
+        const newBoard = getNewBoardState();
+        const newState = {
             ...state,
             board: newBoard,
-            currentPlayerIndex,
-            winner,
-            winningLine
+            winningLine: getWinningLineOrUndefined(newBoard)
         };
+
+        if (newState.winningLine) {
+            newState.winner = this.getCurrentPlayer(state);
+        } else {
+            newState.currentPlayerIndex = nextPlayerIndex(state);
+        }
+
+        return newState;
+
+        function getNewBoardState() {
+            return Board.placeSymbol(state.board, x, y, GameState.getCurrentPlayer(state).symbol);
+        }
 
         function nextPlayerIndex(state) {
             if (GameState.isGameOver(state)) return state.currentPlayerIndex;
             return (state.currentPlayerIndex + 1) % state.players.length;
+        }
+
+        function getWinningLineOrUndefined(board) {
+            return Board.findMatchingLine({ board, x, y, requiredLength: state.winCondition });
         }
     }
 }

@@ -2,8 +2,8 @@ import { Board } from "./Board";
 
 const directions = [[0, 1], [1, 1], [1, 0], [-1, 1]];
 
-export class LineFinder {
-    static findStraightLine({ board, x, y, requiredLength }) {
+export class MatchingLineFinder {
+    static findMatchingLine({ board, x, y, requiredLength }) {
         if (Board.isCellEmpty(board, x, y)) return undefined;
         const symbol = Board.getSymbolAt(board, x, y);
 

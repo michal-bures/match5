@@ -56,16 +56,16 @@ describe("when created 5x5 board", () => {
 
         const expectedLine = [{ x: 3, y: 3 }, { x: 2, y: 2 }, { x: 1, y: 1 }];
 
-        expect(Board.findStraightLine({ board, x: 1, y: 1, requiredLength: 3 })).toEqual(
+        expect(Board.findMatchingLine({ board, x: 1, y: 1, requiredLength: 3 })).toEqual(
             expectedLine
         );
-        expect(Board.findStraightLine({ board, x: 2, y: 2, requiredLength: 3 })).toEqual(
+        expect(Board.findMatchingLine({ board, x: 2, y: 2, requiredLength: 3 })).toEqual(
             expectedLine
         );
-        expect(Board.findStraightLine({ board, x: 3, y: 3, requiredLength: 3 })).toEqual(
+        expect(Board.findMatchingLine({ board, x: 3, y: 3, requiredLength: 3 })).toEqual(
             expectedLine
         );
-        expect(Board.findStraightLine({ board, x: 1, y: 1, requiredLength: 4 })).toBe(undefined);
-        expect(Board.findStraightLine({ board, x: 2, y: 1, requiredLength: 1 })).toBe(undefined);
+        expect(Board.findMatchingLine({ board, x: 1, y: 1, requiredLength: 4 })).toBe(undefined);
+        expect(Board.findMatchingLine({ board, x: 2, y: 1, requiredLength: 1 })).toBe(undefined);
     });
 });

@@ -1,4 +1,4 @@
-import { LineFinder } from "./LineFinder";
+import { MatchingLineFinder } from "./MatchingLineFinder";
 
 function clear(board) {
     return create(board.width, board.height);
@@ -47,8 +47,8 @@ function throwInvalidCoordinatesError(board, x, y) {
     );
 }
 
-function findStraightLine({ board, x, y, requiredLength }) {
-    return LineFinder.findStraightLine({ board, x, y, requiredLength });
+function findMatchingLine({ board, x, y, requiredLength }) {
+    return MatchingLineFinder.findMatchingLine({ board, x, y, requiredLength });
 }
 
 export const Board = {
@@ -58,5 +58,5 @@ export const Board = {
     getSymbolAt,
     isCellValid,
     isCellEmpty,
-    findStraightLine
+    findMatchingLine
 };
