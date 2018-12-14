@@ -1,11 +1,33 @@
-import Board from "./board";
+import { Board } from "./Board";
 
-export default class GameState {
-    constructor() {}
+export class GameState {
+    static startNewGame(width, height) {
+        return {
+            board: Board.create(width, height),
+            players: [{ symbol: "╳" }, { symbol: "◯" }],
+            currentPlayerIndex: 0,
+            winner: undefined
+        };
+    }
 
-    startNewGame(width, height) {
-        this.board = new Board(width, height);
-        this.players = ["X", "0"];
-        this.currentPlayer = 0;
+    static getCurrentPlayer(state) {
+        return state.players[state.currentPlayerIndex];
+    }
+
+    static isValidPlay(state, x, y) {
+        return Board.isCellEmpty(state.board, x, y);
+    }
+
+    static makePlay(state, x, y) {
+        return {
+            ...state,
+            board: Board.placeSymbol(
+                state.board,
+                x,
+                y,
+                state.players[state.currentPlayerIndex].symbol
+            ),
+            currentPlayerIndex: (state.currentPlayerIndex + 1) % state.players.length
+        };
     }
 }

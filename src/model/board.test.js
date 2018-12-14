@@ -1,16 +1,16 @@
-import Board from "./board";
+import { Board } from "./Board";
 
 describe("when created 5x5 board", () => {
     let board;
 
     beforeEach(() => {
-        board = new Board(5, 5);
+        board = Board.create(5, 5);
     });
 
     it("asking for symbol at valid position should return space", () => {
-        expect(board.getSymbolAt(0, 0)).toEqual(" ");
-        expect(board.getSymbolAt(1, 4)).toEqual(" ");
-        expect(board.getSymbolAt(4, 4)).toEqual(" ");
+        expect(Board.getSymbolAt(board, 0, 0)).toEqual(" ");
+        expect(Board.getSymbolAt(board, 1, 4)).toEqual(" ");
+        expect(Board.getSymbolAt(board, 4, 4)).toEqual(" ");
     });
 
     it("asking for symbol at invalid position should throw error", () => {
@@ -20,31 +20,31 @@ describe("when created 5x5 board", () => {
         expectInvalidCoords(0, 5);
 
         function expectInvalidCoords(x, y) {
-            expect(() => board.getSymbolAt(x, y)).toThrowError("invalid cell");
+            expect(() => Board.getSymbolAt(board, x, y)).toThrowError("invalid cell");
         }
     });
 
     it("should remember placed symbols", () => {
-        board.placeSymbol(1, 1, "O");
-        board.placeSymbol(1, 2, "X");
+        board = Board.placeSymbol(board, 1, 1, "O");
+        board = Board.placeSymbol(board, 1, 2, "X");
 
-        expect(board.getSymbolAt(1, 1)).toEqual("O");
-        expect(board.getSymbolAt(1, 2)).toEqual("X");
+        expect(Board.getSymbolAt(board, 1, 1)).toEqual("O");
+        expect(Board.getSymbolAt(board, 1, 2)).toEqual("X");
     });
 
     it("should not allow to overwrite symbols", () => {
-        board.placeSymbol(1, 1, "O");
-        expect(() => board.placeSymbol(1, 1, "X")).toThrowError('already contains "O"');
+        board = Board.placeSymbol(board, 1, 1, "O");
+        expect(() => Board.placeSymbol(board, 1, 1, "X")).toThrowError('already contains "O"');
     });
 
     it("should not allow placing symbols outside the board", () => {
-        expect(() => board.placeSymbol(5, 1, "X")).toThrowError("invalid cell");
-        expect(() => board.placeSymbol(1, 5, "X")).toThrowError("invalid cell");
+        expect(() => Board.placeSymbol(board, 5, 1, "X")).toThrowError("invalid cell");
+        expect(() => Board.placeSymbol(board, 1, 5, "X")).toThrowError("invalid cell");
     });
 
     it("should allow to clear board", () => {
-        board.placeSymbol(1, 1, "O");
-        board.clear();
-        expect(board.getSymbolAt(1, 1)).toEqual(" ");
+        Board.placeSymbol(board, 1, 1, "O");
+        Board.clear(board);
+        expect(Board.getSymbolAt(board, 1, 1)).toEqual(" ");
     });
 });

@@ -1,0 +1,11 @@
+td {
+    font-weight: bold;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.not-clickable {
+    cursor: default;
+}

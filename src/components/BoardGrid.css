@@ -1,0 +1,18 @@
+table {
+    border-collapse: collapse;
+    margin: auto;
+    margin-top: 20px;
+    position: relative;
+}
+
+table,
+th,
+td {
+    border: 1px solid rgb(189, 188, 188);
+}
+
+td {
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+}
