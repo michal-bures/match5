@@ -1,42 +1,49 @@
 import React, { Component } from "react";
-import "./App.css";
-import AppHeader from "./components/AppHeader";
-import { GameGrid } from "./components/GameGrid";
-import { GameState } from "./model/GameState";
-import GameStateMessage from "./components/GameStateMessage";
 import { GAME_CONFIG } from "./config";
-import ErrorBoundary from "./components/ErrorBoundary";
-
-function getInitialGameState() {
-    return GameState.startNewGame(GAME_CONFIG);
-}
+import AppHeader from "./shared-components/AppHeader";
+import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
+import { ROUTES } from "./routes";
+import PlayPage from "./pages/play/PlayPage";
+import SetupPage from "./pages/setup/SetupPage";
 
 class App extends Component {
-    state = getInitialGameState();
+    state = {
+        gameConfig: GAME_CONFIG
+    };
 
     render() {
         return (
-            <div className="App">
-                <AppHeader gameState={this.state} onNewGameClicked={this.handleStartNewGame} />
-                <ErrorBoundary>
-                    <GameGrid gameState={this.state} onCellSelected={this.handleCellSelected} />
-                </ErrorBoundary>
-                <GameStateMessage gameState={this.state} />
-            </div>
+            <Router>
+                <div className="App">
+                    <AppHeader
+                        matchHowMany={this.state.gameConfig.winCondition}
+                        onNewGameClicked={this.handleStartNewGame}
+                    />
+                    <Route
+                        path={ROUTES.PLAY}
+                        render={props => <PlayPage gameConfig={this.state.gameConfig} />}
+                    />
+                    <Route
+                        path={ROUTES.SETUP}
+                        render={props => (
+                            <SetupPage
+                                defaultConfig={props.gameConfig}
+                                onSetupConfirmed={this.handleSetupConfirmed}
+                            />
+                        )}
+                    />
+                </div>
+            </Router>
         );
     }
 
-    handleCellSelected = (x, y) => {
-        if (!GameState.isGameOver(this.state) && GameState.isValidPlay(this.state, x, y)) {
-            console.info(
-                `Player ${GameState.getCurrentPlayer(this.state).symbol} making play at (${x},${y})`
-            );
-            this.setState(GameState.makePlay(this.state, x, y));
-        }
+    handleStartNewGame = () => {
+        alert("TODO");
     };
 
-    handleStartNewGame = () => {
-        this.setState(getInitialGameState());
+    handleSetupConfirmed = newConfig => {
+        this.setState({ gameConfig: { ...newConfig } });
+        this.props.history.push(ROUTES.PLAY);
     };
 }
 

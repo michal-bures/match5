@@ -1,6 +1,6 @@
 import React from "react";
 import "./Cell.css";
-import PlayerSymbol from "./PlayerSymbol";
+import PlayerSymbol from "../../shared-components/PlayerSymbol";
 
 const Cell = ({ owner, highlighted, onClick, clickable }) => {
     return (

@@ -1,7 +1,7 @@
 import React from "react";
 import "./GameStateMessage.css";
-import { GameState } from "../model/GameState";
-import PlayerSymbol from "./PlayerSymbol";
+import { GameState } from "../../model/GameState";
+import PlayerSymbol from "../../shared-components/PlayerSymbol";
 
 const GameStateMessage = ({ gameState }) => {
     return (

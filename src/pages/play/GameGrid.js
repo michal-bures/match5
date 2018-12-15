@@ -1,10 +1,10 @@
-import { Board } from "../model/Board";
+import { Board } from "../../model/Board";
 import Cell from "./Cell";
-import { GameState } from "../model/GameState";
+import { GameState } from "../../model/GameState";
 import React, { Component } from "react";
 import "./GameGrid.css";
-import { GameStateType } from "../prop-types/GameState.proptype";
 import PropTypes from "prop-types";
+import { GameStateType } from "../../prop-types/GameStateType";
 
 export class GameGrid extends Component {
     static propTypes = {
