@@ -5,6 +5,7 @@ import { GameGrid } from "./components/GameGrid";
 import { GameState } from "./model/GameState";
 import GameStateMessage from "./components/GameStateMessage";
 import { GAME_CONFIG } from "./config";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function getInitialGameState() {
     return GameState.startNewGame(GAME_CONFIG);
@@ -16,14 +17,16 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <AppHeader gameState={this.state} onNewGameClicked={this.startNewGame} />
-                <GameGrid gameState={this.state} onCellSelected={this.onCellSelected} />
+                <AppHeader gameState={this.state} onNewGameClicked={this.handleStartNewGame} />
+                <ErrorBoundary>
+                    <GameGrid gameState={this.state} onCellSelected={this.handleCellSelected} />
+                </ErrorBoundary>
                 <GameStateMessage gameState={this.state} />
             </div>
         );
     }
 
-    onCellSelected = (x, y) => {
+    handleCellSelected = (x, y) => {
         if (!GameState.isGameOver(this.state) && GameState.isValidPlay(this.state, x, y)) {
             console.info(
                 `Player ${GameState.getCurrentPlayer(this.state).symbol} making play at (${x},${y})`
@@ -32,7 +35,7 @@ class App extends Component {
         }
     };
 
-    startNewGame = () => {
+    handleStartNewGame = () => {
         this.setState(getInitialGameState());
     };
 }
