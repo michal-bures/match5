@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { GAME_CONFIG } from "./config";
 import AppHeader from "./shared-components/AppHeader";
-import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ROUTES } from "./routes";
 import PlayPage from "./pages/play/PlayPage";
 import SetupPage from "./pages/setup/SetupPage";
+import { AppContext } from "./model/AppContext";
+import { GameState } from "./model/GameState";
+import { Board } from "./model/Board";
 
 class App extends Component {
     state = {
@@ -13,37 +16,29 @@ class App extends Component {
 
     render() {
         return (
-            <Router>
-                <div className="App">
-                    <AppHeader
-                        matchHowMany={this.state.gameConfig.winCondition}
-                        onNewGameClicked={this.handleStartNewGame}
-                    />
-                    <Route
-                        path={ROUTES.PLAY}
-                        render={props => <PlayPage gameConfig={this.state.gameConfig} />}
-                    />
-                    <Route
-                        path={ROUTES.SETUP}
-                        render={props => (
-                            <SetupPage
-                                defaultConfig={props.gameConfig}
-                                onSetupConfirmed={this.handleSetupConfirmed}
-                            />
-                        )}
-                    />
-                </div>
-            </Router>
+            <AppContext.Provider value={this.getAppContext()}>
+                <Router>
+                    <div className="App">
+                        <AppHeader />
+                        <Route path={ROUTES.PLAY} component={PlayPage} />
+                        <Route path={ROUTES.SETUP} component={SetupPage} />
+                    </div>
+                </Router>
+            </AppContext.Provider>
         );
     }
 
-    handleStartNewGame = () => {
-        alert("TODO");
+    getAppContext = () => {
+        return {
+            config: this.state.gameConfig,
+            setConfig: this.setConfig,
+            GameState: GameState,
+            Board: Board
+        };
     };
 
-    handleSetupConfirmed = newConfig => {
-        this.setState({ gameConfig: { ...newConfig } });
-        this.props.history.push(ROUTES.PLAY);
+    setConfig = newConfig => {
+        this.setState({ gameConfig: newConfig });
     };
 }
 
