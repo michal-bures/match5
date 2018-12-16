@@ -1,10 +1,9 @@
-import { Board } from "../model/Board";
 import Cell from "./Cell";
-import { GameState } from "../model/GameState";
 import React, { Component } from "react";
 import "./GameGrid.css";
-import { GameStateType } from "../prop-types/GameState.proptype";
 import PropTypes from "prop-types";
+import { GameStateType } from "../../prop-types/GameStateType";
+import { AppContext } from "../../model/AppContext";
 
 export class GameGrid extends Component {
     static propTypes = {
@@ -12,16 +11,17 @@ export class GameGrid extends Component {
         onCellSelected: PropTypes.func
     };
 
+    static contextType = AppContext;
+
     static defaultProps = {
         onCellSelected: () => {}
     };
 
     render = () => {
         console.debug("GameGrid.render()");
-        //for testing error boundary :)
-        //randomlyThrowError();
 
         const gameState = this.props.gameState;
+        const GameState = this.context.GameState;
         const rows = [...Array(gameState.board.height).keys()];
         return (
             <div
@@ -46,6 +46,7 @@ export class GameGrid extends Component {
     };
     renderCell = (row, column) => {
         const gameState = this.props.gameState;
+        const { GameState, Board } = this.context;
         const symbol = Board.getSymbolAt(gameState.board, column, row);
         const symbolOwner = GameState.getPlayerBySymbol(gameState, symbol);
 
@@ -61,6 +62,7 @@ export class GameGrid extends Component {
     };
     isCellClickable = (row, column) => {
         const gameState = this.props.gameState;
+        const { GameState, Board } = this.context;
         return Board.isCellEmpty(gameState.board, column, row) && !GameState.isGameOver(gameState);
     };
 

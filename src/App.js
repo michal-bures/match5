@@ -1,42 +1,44 @@
 import React, { Component } from "react";
-import "./App.css";
-import AppHeader from "./components/AppHeader";
-import { GameGrid } from "./components/GameGrid";
-import { GameState } from "./model/GameState";
-import GameStateMessage from "./components/GameStateMessage";
 import { GAME_CONFIG } from "./config";
-import ErrorBoundary from "./components/ErrorBoundary";
-
-function getInitialGameState() {
-    return GameState.startNewGame(GAME_CONFIG);
-}
+import AppHeader from "./shared-components/AppHeader";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { ROUTES } from "./routes";
+import PlayPage from "./pages/play/PlayPage";
+import SetupPage from "./pages/setup/SetupPage";
+import { AppContext } from "./model/AppContext";
+import { GameState } from "./model/GameState";
+import { Board } from "./model/Board";
 
 class App extends Component {
-    state = getInitialGameState();
+    state = {
+        gameConfig: GAME_CONFIG
+    };
 
     render() {
         return (
-            <div className="App">
-                <AppHeader gameState={this.state} onNewGameClicked={this.handleStartNewGame} />
-                <ErrorBoundary>
-                    <GameGrid gameState={this.state} onCellSelected={this.handleCellSelected} />
-                </ErrorBoundary>
-                <GameStateMessage gameState={this.state} />
-            </div>
+            <AppContext.Provider value={this.getAppContext()}>
+                <Router>
+                    <div className="App">
+                        <AppHeader />
+                        <Route path={ROUTES.PLAY} component={PlayPage} />
+                        <Route path={ROUTES.SETUP} component={SetupPage} />
+                    </div>
+                </Router>
+            </AppContext.Provider>
         );
     }
 
-    handleCellSelected = (x, y) => {
-        if (!GameState.isGameOver(this.state) && GameState.isValidPlay(this.state, x, y)) {
-            console.info(
-                `Player ${GameState.getCurrentPlayer(this.state).symbol} making play at (${x},${y})`
-            );
-            this.setState(GameState.makePlay(this.state, x, y));
-        }
+    getAppContext = () => {
+        return {
+            config: this.state.gameConfig,
+            setConfig: this.setConfig,
+            GameState: GameState,
+            Board: Board
+        };
     };
 
-    handleStartNewGame = () => {
-        this.setState(getInitialGameState());
+    setConfig = newConfig => {
+        this.setState({ gameConfig: newConfig });
     };
 }
 
